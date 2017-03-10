@@ -13,6 +13,7 @@ module.exports =
           "https://*.googleapis.com"
           "https://*.gstatic.com"
           "https://cdn.rawgit.com"
+          "http://cdn.rawgit.com"
         ]
         ret = csp
           directives:

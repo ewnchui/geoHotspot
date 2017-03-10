@@ -42,6 +42,8 @@ angular
             collection.state.skip = 0
             get viewport.getBounds()
           tapHold: (map, event, loc) ->
+            model = new resource.Hotspot tag:[{name:'unknown'}], name:'unknown', coordinates:[loc[0].lng(),loc[0].lat()]
+            model.$save()
             $log.info JSON.stringify loc[0]
         markersEvents:
           click: (marker, eventName, model) ->

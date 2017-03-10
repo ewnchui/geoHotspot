@@ -5,6 +5,7 @@ require 'angular-google-maps'
 require 'angular-simple-logger'
 require './templates'
 require 'log_toast'
+require 'util.auth'
 
 opts =
   enableHighAccracy: true
@@ -20,6 +21,7 @@ angular
     'uiGmapgoogle-maps'
     'starter.controller'
     'templates'
+    'util.auth'
     'logToast'
   ]
 
@@ -34,6 +36,9 @@ angular
 
   .config ($urlRouterProvider) ->
     $urlRouterProvider.otherwise '/map'
+
+  .run (authService) ->
+    authService.login env.oauth2().opts
 
   .run ($rootScope, $ionicPlatform, $location, $http) ->
     $ionicPlatform.ready ->
