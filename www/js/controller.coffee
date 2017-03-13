@@ -55,7 +55,7 @@ angular
             collection.state.skip = 0
             get viewport.getBounds()
           tapHold: (map, event, loc) ->
-            $scope.collection.add new resource.Hotspot tag:[{name:'unknown'}], coordinates:[loc[0].lng(), loc[0].lat()], name:'unknown', type:'Point', id:'unknown'
+            $scope.collection.add new resource.Hotspot coordinates:[loc[0].lng(), loc[0].lat()], type:'Point'
             $scope.$apply 'collection'
             $scope.showPopup()
         markersEvents:
