@@ -12,7 +12,7 @@ angular
   .controller 'MenuCtrl', ($scope) ->
        return
 
-  .controller 'MapCtrl', ($scope, pos, resource, $log, $ionicSideMenuDelegate) ->
+  .controller 'MapCtrl', ($scope, pos, resource, $log, $ionicPopup) ->
 
     collection = new resource.HotspotList()
 
@@ -25,6 +25,19 @@ angular
 
     _.extend $scope,
       collection: collection
+      showPopup: ->
+        popup = $ionicPopup.show({
+           template: '<input type="text" ng-model="model.name" placeHolder="Hotspot name"><br><input type="text" ng-model="model.tag" placeHolder="Tag">',
+           title: 'Create Hotspot',
+           scope: $scope,
+           buttons: [
+             { text: 'Cancel'},
+             {
+                text: '<b>Save</b>',
+                type: 'button-positive'
+             }
+           ]
+        })
       map:
         center: _.pick pos, 'latitude', 'longitude'
         zoom: env.map.zoom
@@ -44,6 +57,7 @@ angular
           tapHold: (map, event, loc) ->
             $scope.collection.add new resource.Hotspot tag:[{name:'unknown'}], coordinates:[loc[0].lng(), loc[0].lat()], name:'unknown', type:'Point', id:'unknown'
             $scope.$apply 'collection'
+            $scope.showPopup()
         markersEvents:
           click: (marker, eventName, model) ->
             $scope.map.window.model = model
