@@ -10,9 +10,9 @@ angular
   ]
 
   .controller 'MenuCtrl', ($scope) ->
-    return
+       return
 
-  .controller 'MapCtrl', ($scope, pos, resource, $log) ->
+  .controller 'MapCtrl', ($scope, pos, resource, $log, $ionicSideMenuDelegate) ->
 
     collection = new resource.HotspotList()
 
@@ -42,9 +42,8 @@ angular
             collection.state.skip = 0
             get viewport.getBounds()
           tapHold: (map, event, loc) ->
-            model = new resource.Hotspot tag:[{name:'unknown'}], name:'unknown', coordinates:[loc[0].lng(),loc[0].lat()]
-            model.$save()
-            $log.info JSON.stringify loc[0]
+            $scope.collection.add new resource.Hotspot tag:[{name:'unknown'}], coordinates:[loc[0].lng(), loc[0].lat()], name:'unknown', type:'Point', id:'unknown'
+            $scope.$apply 'collection'
         markersEvents:
           click: (marker, eventName, model) ->
             $scope.map.window.model = model
