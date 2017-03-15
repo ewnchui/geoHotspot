@@ -27,13 +27,17 @@ angular
       collection: collection
       showPopup: ->
         popup = $ionicPopup.show({
-           template: '<input type="text" ng-model="model.name" placeHolder="Hotspot name"><br><input type="text" ng-model="model.tag" placeHolder="Tag">',
+           templateUrl: 'templates/hotspot/popup.html',
            title: 'Create Hotspot',
            scope: $scope,
            buttons: [
-             { text: 'Cancel'},
              {
-                text: '<b>Save</b>',
+                text: 'Cancel',
+                onTap: ->
+                  return $scope.collection.models.pop()
+             },
+             {
+                text: 'Save',
                 type: 'button-positive'
              }
            ]
@@ -55,7 +59,7 @@ angular
             collection.state.skip = 0
             get viewport.getBounds()
           tapHold: (map, event, loc) ->
-            $scope.collection.add new resource.Hotspot coordinates:[loc[0].lng(), loc[0].lat()], type:'Point'
+            $scope.collection.add new resource.Hotspot coordinates:[loc[0].lng(), loc[0].lat()], type:'Point', id:'unknown'
             $scope.$apply 'collection'
             $scope.showPopup()
         markersEvents:
