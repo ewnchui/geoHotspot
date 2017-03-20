@@ -34,14 +34,25 @@ angular
              {
                 text: 'Cancel',
                 onTap: ->
-                  return $scope.collection.models.pop()
+                  _.remove $scope.collection.models, (model) ->
+                    model.id == 'unknown'
+                  $scope.collection.length = $scope.collection.models.length
              },
              {
                 text: 'Save',
                 type: 'button-positive'
+                onTap: ->
+                  $scope.model.tag = [{name: $scope.model.tag}]
+                  delete $scope.model['id']
+                  $scope.model.$save()
+                    .catch (err) ->
+                      $log.error err.data.message
+                  return
+                  
              }
            ]
         })
+        
       map:
         center: _.pick pos, 'latitude', 'longitude'
         zoom: env.map.zoom
@@ -59,7 +70,8 @@ angular
             collection.state.skip = 0
             get viewport.getBounds()
           tapHold: (map, event, loc) ->
-            $scope.collection.add new resource.Hotspot coordinates:[loc[0].lng(), loc[0].lat()], type:'Point', id:'unknown'
+            $scope.model = new resource.Hotspot coordinates:[loc[0].lng(), loc[0].lat()], type:'Point', id:'unknown'
+            $scope.collection.add $scope.model
             $scope.$apply 'collection'
             $scope.showPopup()
         markersEvents:

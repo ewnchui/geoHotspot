@@ -29,3 +29,4 @@ module.exports =
       latitude: parseFloat config.LAT
       longitude: parseFloat config.LNG
     zoom: parseInt config.ZOOM
+  tag: config.TAGS

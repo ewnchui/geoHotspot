@@ -19,8 +19,8 @@ angular.module 'starter.model', ['PageableAR']
       $urlRoot: "api/hotspot/"
 
       $parse: (data, opts) ->
-        tag = data.tag?[0]?.name || "unknown"
-        ret = super(data, opts)
+        tag = if _.includes env.tag.split(","), data.tag?[0]?.name then data.tag?[0]?.name else "unknown"
+		ret = super(data, opts)
         ret['options'] = {title: "#{ret['name']}", icon: "img/#{tag}.png"}
         return ret
 
