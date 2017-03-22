@@ -27,7 +27,7 @@ angular
       collection: collection
       showPopup: ->
         popup = $ionicPopup.show({
-           templateUrl: 'templates/hotspot/popup.html',
+           templateUrl: 'templates/hotspot/create.html',
            title: 'Create Hotspot',
            scope: $scope,
            buttons: [
@@ -45,6 +45,8 @@ angular
                   $scope.model.tag = [{name: $scope.model.tag}]
                   delete $scope.model['id']
                   $scope.model.$save()
+                    .then (s) ->
+                      $scope.model.$refetch()
                     .catch (err) ->
                       $log.error err.data.message
                   return
