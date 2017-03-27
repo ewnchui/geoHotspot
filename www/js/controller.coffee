@@ -46,7 +46,7 @@ angular
                   delete $scope.model['id']
                   $scope.model.$save()
                     .then (s) ->
-                      $scope.model.$refetch()
+                      $scope.map.center = s.coordinates
                     .catch (err) ->
                       $log.error err.data.message
                   return
