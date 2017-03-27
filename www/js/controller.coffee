@@ -73,8 +73,6 @@ angular
             get viewport.getBounds()
           tapHold: (map, event, loc) ->
             $scope.model = new resource.Hotspot coordinates:[loc[0].lng(), loc[0].lat()], type:'Point', id:'unknown'
-            $scope.collection.add $scope.model
-            $scope.$apply 'collection'
             $scope.showPopup()
         markersEvents:
           click: (marker, eventName, model) ->
