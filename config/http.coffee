@@ -16,7 +16,6 @@ module.exports =
         src = [
           "'self'"
           "data:"
-          "https://app.ogcio.gov.hk"
           "http://#{host}"
           "https://#{host}"
           "https://*.googleapis.com"
