@@ -12,7 +12,7 @@ angular
   .controller 'MenuCtrl', ($scope) ->
        return
 
-  .controller 'MapCtrl', ($scope, pos, resource, $log, $ionicPopup) ->
+  .controller 'MapCtrl', ($scope, pos, resource, $log, $ionicPopup, $ionicActionSheet) ->
 
     collection = new resource.HotspotList()
 
@@ -24,7 +24,37 @@ angular
              get box
 
     _.extend $scope,
+      mouseUp: false
       collection: collection
+      showPopupUp: (model) ->
+        $scope.model = model
+        if _.isEmpty model.extra
+           $scope.model.extra = ""
+        else	
+           $scope.model.extra.toString = ->
+             return JSON.stringify @
+        popup = $ionicPopup.show({
+           templateUrl: 'templates/hotspot/update.html',
+           title: 'Update Hotspot',
+           scope: $scope,
+           buttons: [
+             {
+                text: 'Cancel',
+             },
+             {
+                text: 'Save',
+                type: 'button-positive'
+                onTap: ->
+                  $scope.model.$save()
+                    .then (s) ->
+                      $scope.map.center = s.coordinates
+                    .catch (err) ->
+                      $log.error err.data.message
+                  return
+             }
+           ]
+        })
+                  
       showPopup: ->
         popup = $ionicPopup.show({
            templateUrl: 'templates/hotspot/create.html',
@@ -78,6 +108,22 @@ angular
           click: (marker, eventName, model) ->
             $scope.map.window.model = model
             $scope.map.window.show = true
+          mousedown: (marker, eventName, model) ->
+            $scope.mouseUp = false
+            cb = ->
+              if $scope.mouseUp == false
+                $ionicActionSheet.show
+                   buttons: [
+                     { text: 'Drag & Drop', cmd: 'drag'}
+                     { text: 'Update', cmd: 'up'}
+                   ]
+                   buttonClicked: (index, button) ->
+                     if button.cmd =='up'
+                       $scope.showPopupUp model
+                     return true 
+            setTimeout cb, 1000
+          mouseup: ->
+            $scope.mouseUp = true
 
   .controller 'HotspotCtrl', ($scope, model, $location) ->
     return
