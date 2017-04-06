@@ -82,34 +82,3 @@ angular
             .catch (err) ->
               env.map.pos
 
-    $stateProvider.state 'app.createHotspot',
-      url: "/hotspot/create"
-      cache: false
-      views:
-        'menuContent':
-          templateUrl: "templates/hotspot/create.html"
-          #controller: "createHotspotCtrl"
-          controller: 'HotspotCtrl'
-      resolve:
-        cliModel: 'model'
-        model: (cliModel) ->
-          ret = new cliModel.Hotspot()
-
-    $stateProvider.state 'app.editHotspot',
-      url: "/hotspot/edit/:id"
-      cache: false
-      views:
-        'menuContent':
-          templateUrl: "templates/hotspot/edit.html"
-          controller: 'HotspotCtrl'
-      resolve:
-        id: ($stateParams) ->
-          $stateParams.id
-        cliModel: 'model'
-        model: (cliModel, id) ->
-          ret = new cliModel.Hotspot({id: id} )
-          ret.$fetch()
-            .then () ->
-              ret.origTagID = _.map ret.tags, (tag) ->
-                tag.id
-              return ret
