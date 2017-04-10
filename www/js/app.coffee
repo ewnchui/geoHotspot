@@ -6,6 +6,7 @@ require 'angular-simple-logger'
 require './templates'
 require 'log_toast'
 require 'util.auth'
+require 'ng-tags-input'
 
 opts =
   enableHighAccracy: true
@@ -23,6 +24,7 @@ angular
     'templates'
     'util.auth'
     'logToast'
+    'ngTagsInput'
   ]
 
   # ionic default settings

@@ -12,7 +12,7 @@ angular
   .controller 'MenuCtrl', ($scope) ->
        return
 
-  .controller 'MapCtrl', ($scope, pos, resource, $log, $ionicPopup, $ionicActionSheet) ->
+  .controller 'MapCtrl', ($scope, pos, resource, $log, $ionicPopup, $ionicActionSheet, $http) ->
 
     collection = new resource.HotspotList()
 
@@ -26,6 +26,12 @@ angular
     _.extend $scope,
       mouseUp: false
       collection: collection
+      loadTags: ($query, taglist) ->
+        searchTag = $query.trim()
+        r = new RegExp(searchTag, 'i')
+        return _.filter taglist, (item) ->
+          r.test(item?.name)
+              
       showPopupUp: (model) ->
         $scope.model = model
         if _.isEmpty model.extra
@@ -103,6 +109,16 @@ angular
             get viewport.getBounds()
           tapHold: (map, event, loc) ->
             $scope.model = new resource.Hotspot coordinates:[loc[0].lng(), loc[0].lat()], type:'Point', id:'unknown'
+            $scope.tags = []
+            $scope.taglist = []
+            $http.get "api/tag"
+              .then (res) =>
+                taglist = res.data.results
+                _.each taglist, (tag) ->
+                  _.extend tag,
+                    text: tag.name
+                $scope.taglist = taglist
+            
             $scope.showPopup()
         markersEvents:
           click: (marker, eventName, model) ->

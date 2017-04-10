@@ -16,7 +16,7 @@ module.exports =
         src = [
           "'self'"
           "data:"
-          "https://app.ogcio.gov.hk"
+          "https://raw.githubusercontent.com"
           "http://#{host}"
           "https://#{host}"
           "https://*.googleapis.com"
