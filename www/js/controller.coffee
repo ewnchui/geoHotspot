@@ -78,7 +78,7 @@ angular
                 text: 'Save',
                 type: 'button-positive'
                 onTap: ->
-                  $scope.model.tag = [{name: $scope.model.tag}]
+                  $scope.model.tag = [{name: $scope.tags[0].text}]
                   delete $scope.model['id']
                   $scope.model.$save()
                     .then (s) ->
