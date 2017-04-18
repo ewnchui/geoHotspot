@@ -18,23 +18,14 @@ module.exports =
       .catch res.serverError
 
   create: (req, res) ->
-    data = actionUtil.parseValues(req)
-    tag = req.body.tag[0].name
-    email = req.user.email
-    
-    newUser = email: email
-    newTag = name: tag
-        
-    Promise
-      .all [
-        sails.models.user.findOrCreate newUser, newUser
-        sails.models.tag.findOrCreate newTag, newTag
-      ]
-      .then (res) ->
-        data = _.extend data,
-          tag: [tag]          
-        sails.log.debug "create hotspot: #{JSON.stringify data}"
-        sails.models.hotspot
-          .create data  
-          .then res.ok
-          .catch res.serverError
+     Model = actionUtil.parseModel(req)
+     data = actionUtil.parseValues(req)
+     newTag = name: req.body.tag[0].name
+     data = _.extend data,
+       tag: req.body.tag[0].name
+     sails.models.tag.findOrCreate newTag, newTag
+       .then (tag) ->
+         Model.create(data)
+           .then (model) ->
+             res.created(model)
+       .catch res.serverError
