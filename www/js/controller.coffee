@@ -32,7 +32,7 @@ angular
         return _.filter taglist, (item) ->
           r.test(item?.name)
               
-      showPopupUp: (model) ->
+      showPopUpdate: (model) ->
         $scope.model = model
         if _.isEmpty model.extra
            $scope.model.extra = ""
@@ -40,12 +40,21 @@ angular
            $scope.model.extra.toString = ->
              return JSON.stringify @
         popup = $ionicPopup.show({
-           templateUrl: 'templates/hotspot/update.html',
+           templateUrl: (if model.options.draggable then 'templates/hotspot/updateDrag.html' else 'templates/hotspot/update.html'),
            title: 'Update Hotspot',
            scope: $scope,
            buttons: [
              {
                 text: 'Cancel',
+                onTap: ->
+                  model.options = _.pick model.options, 'title', 'icon'
+                  $http.get "api/hotspot/#{model.id}" 
+                      .then (res) ->
+                         model.coordinates = res.data.coordinates
+                         #$scope.collection.$refetch
+                         #_.each $scope.collection.models, (instance) ->
+                         #    if instance.id == model.id
+                         #       instance.coordinates = res.data.coordinates
              },
              {
                 text: 'Save',
@@ -127,19 +136,26 @@ angular
           mousedown: (marker, eventName, model) ->
             $scope.mouseUp = false
             cb = ->
-              if $scope.mouseUp == false
+              if $scope.mouseUp == false && model.options.draggable != true 
                 $ionicActionSheet.show
                    buttons: [
                      { text: 'Drag & Drop', cmd: 'drag'}
                      { text: 'Update', cmd: 'up'}
                    ]
                    buttonClicked: (index, button) ->
-                     if button.cmd =='up'
-                       $scope.showPopupUp model
+                     if button.cmd =='drag'
+                       _.extend model.options,
+                          draggable: true
+                          labelContent: "DRAG ME!"
+                          labelAnchor: "25 0"
+                     else
+                       $scope.showPopUpdate model
                      return true 
             setTimeout cb, 1000
           mouseup: ->
             $scope.mouseUp = true
+          dragend: (marker, eventName, model) ->
+            $scope.showPopUpdate model
 
   .controller 'HotspotCtrl', ($scope, model, $location) ->
     return
