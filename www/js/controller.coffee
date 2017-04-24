@@ -47,19 +47,18 @@ angular
              {
                 text: 'Cancel',
                 onTap: ->
-                  model.options = _.pick model.options, 'title', 'icon'
-                  $http.get "api/hotspot/#{model.id}" 
-                      .then (res) ->
-                         model.coordinates = res.data.coordinates
-                         #$scope.collection.$refetch
-                         #_.each $scope.collection.models, (instance) ->
-                         #    if instance.id == model.id
-                         #       instance.coordinates = res.data.coordinates
+                  if model.options.draggable
+                     model.options = _.pick model.options, 'title', 'icon'
+                     $http.get "api/hotspot/#{model.id}" 
+                         .then (res) ->
+                            model.coordinates = res.data.coordinates
              },
              {
                 text: 'Save',
                 type: 'button-positive'
                 onTap: ->
+                  if model.options.draggable
+                    model.options = _.pick model.options, 'title', 'icon'
                   $scope.model.$save()
                     .then (s) ->
                       $scope.map.center = s.coordinates

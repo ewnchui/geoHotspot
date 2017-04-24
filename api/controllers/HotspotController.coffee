@@ -29,3 +29,18 @@ module.exports =
            .then (model) ->
              res.created(model)
        .catch res.serverError
+
+  update: (req, res) ->
+     Model = actionUtil.parseModel(req)
+     data = actionUtil.parseValues(req)
+     pk = actionUtil.requirePk(req)
+
+     sails.models.tag.findOrCreate {name:data.tag[0].name}, data.tag
+        .then (taginstance) ->
+           data = _.omit data, 'tag'
+           Model.update(pk, data)
+             .then (model) ->
+                taginstance.hotspot.add model
+                res.ok model
+        .catch res.serverError
+
